@@ -1,4 +1,3 @@
-
 import requests
 import argparse
 
@@ -14,8 +13,8 @@ parser.add_argument('-b', '--build',
                     default="latest",
                     )
 
-
 args = parser.parse_args()
+
 
 def getLatestVersion():
     url = "https://api.papermc.io/v2/projects/paper"
@@ -33,9 +32,10 @@ def getLatestDownloadLink(version, build):
     return response.json()["downloads"]["application"]["name"]
 
 def getDownload(version, build, link):
-    url = "https://api.papermc.io/v2/projects/paper/versions/"+ str(version) +"/builds/"+ str(build) + "/downloads/" + link
+    url = "https://api.papermc.io/v2/projects/paper/versions/"+ str(version) +"/builds/"+ str(build) + "/downloads/" + str(link)
     response = requests.get(url=url)
     return response.content
+
 
 if __name__ == "__main__":
     # Get version
@@ -45,6 +45,7 @@ if __name__ == "__main__":
         version = args.version
     print("Latest Version: " + str(version))
 
+
     # Get build
     if args.build == "latest":
         build = getLatestBuild(version)
@@ -52,11 +53,13 @@ if __name__ == "__main__":
         build = args.build
     print("Latest Build: " + str(build))
         
+
     # Get download link
     downloadLink = getLatestDownloadLink(version, build)
     print("Download File: " + str(downloadLink))
 
-    # Preform Download
+
+    # Preform Download and save
     download = getDownload(version, build, downloadLink)
     with open(str(downloadLink), "wb") as f:
         f.write(download)
