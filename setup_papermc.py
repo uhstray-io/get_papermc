@@ -12,6 +12,11 @@ parser.add_argument('-b', '--build',
                     help='Build to download. Defaults to latest version.',
                     default="latest",
                     )
+parser.add_argument('-gb', '--GigaBytes',
+                    help='The amount of Gigabytes. Defaults to 8.',
+                    default="8",
+                    )
+
 
 args = parser.parse_args()
 
@@ -35,6 +40,13 @@ def getDownload(version, build, link):
     url = "https://api.papermc.io/v2/projects/paper/versions/"+ str(version) +"/builds/"+ str(build) + "/downloads/" + str(link)
     response = requests.get(url=url)
     return response.content
+
+def getScripts(downloadLink, gigs):
+    text = """@echo off
+java -Xms512M -Xmx"""+ str(gigs) +"""G -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -jar """+ str(downloadLink) +"""
+pause"""
+    return text
+
 
 
 if __name__ == "__main__":
@@ -63,3 +75,13 @@ if __name__ == "__main__":
     download = getDownload(version, build, downloadLink)
     with open(str(downloadLink), "wb") as f:
         f.write(download)
+
+    # Create Scripts
+    script = getScripts(downloadLink, args.GigaBytes)
+    with open("start.bat", "w") as f:
+        f.write(script)
+
+    with open("start.sh", "w") as f:
+        f.write(script)
+    print("Scripts Created")
+
