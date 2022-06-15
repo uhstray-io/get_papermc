@@ -17,7 +17,6 @@ parser.add_argument('-gb', '--GigaBytes',
                     default="8",
                     )
 
-
 args = parser.parse_args()
 
 
@@ -55,7 +54,7 @@ if __name__ == "__main__":
         version = getLatestVersion()
     else:
         version = args.version
-    print("Latest Version: " + str(version))
+    print("Version: " + str(version))
 
 
     # Get build
@@ -63,12 +62,12 @@ if __name__ == "__main__":
         build = getLatestBuild(version)
     else:
         build = args.build
-    print("Latest Build: " + str(build))
+    print("Build: " + str(build))
         
 
     # Get download link
     downloadLink = getLatestDownloadLink(version, build)
-    print("Download File: " + str(downloadLink))
+    print("Downloaded File: " + str(downloadLink))
 
 
     # Preform Download and save
